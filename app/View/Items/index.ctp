@@ -9,13 +9,13 @@
 		<th><?php echo $this->Paginator->sort('price'); ?></th>
 		<th><?php echo $this->Paginator->sort('downloadable'); ?></th>
 		<th><?php echo $this->Paginator->sort('quantity', 'In Stock'); ?></th>
-		<?php /* 
+		<?php /*
 		<th><?php echo $this->Paginator->sort('max_quantity'); ?></th>
 		<th><?php echo $this->Paginator->sort('min_quantity'); ?></th>
 		*/ ?>
 		<th><?php echo $this->Paginator->sort('for_sale'); ?></th>
-		<th><?php echo __('Via Get'); ?>
-		<th><?php echo __('Via Post'); ?>
+		<th><?php echo __('Via Get'); ?></th>
+		<th><?php echo __('Via Post'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php
@@ -80,6 +80,223 @@
 		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
 	?>
 	</div>
+
+
+	<h2><?php echo __('More options for GET'); ?></h2>
+	<p>
+		The "buy me" link demonstrates buying something through a get request. The form next to it through a post. The buy link can also pass the quantity by quantity:number. When not passed its set to 1 by default.
+	</p>
+	<table cellpadding="0" cellspacing="0">
+	<tr>
+		<th><?php echo $this->Paginator->sort('name'); ?></th>
+		<th><?php echo __('Via Get'); ?></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+	</tr>
+	<?php foreach ($items as $item): ?>
+	<?php
+		if (!$item['Item']['for_sale']) {
+			continue;
+		}
+	?>
+	<tr>
+		<td>
+			<?php
+				echo $this->Html->link($item['Item']['name'], array(
+					'action' => 'view', $item['Item']['id']));
+			?>
+		</td>
+
+		<td>
+			<?php
+				echo $this->Cart->link(__('buy me'), array(
+					'item' => $item['Item']['id'],
+				));
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Cart->link(__('remove me'), array(
+					'item' => $item['Item']['id'],
+					'remove' => 1
+				));
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Cart->link(__('buy 5'), array(
+					'item' => $item['Item']['id'],
+					'quantity' => 5
+				));
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Cart->link(__('add 3'), array(
+					'item' => $item['Item']['id'],
+					'increment' => 3
+				));
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Cart->link(__('minus 1'), array(
+					'item' => $item['Item']['id'],
+					'decrement' => 1
+				));
+			?>
+		</td>
+	</tr>
+	<?php endforeach; ?>
+	</table>
+
+
+	<h2><?php echo __('More options for POST'); ?></h2>
+	<p>
+		The "buy me" link demonstrates buying something through a get request. The form next to it through a post. The buy link can also pass the quantity by quantity:number. When not passed its set to 1 by default.
+	</p>
+	<table cellpadding="0" cellspacing="0">
+	<tr>
+		<th><?php echo $this->Paginator->sort('name'); ?></th>
+		<th>Buy me</th>
+		<th>Buy any</th>
+		<th>1 more</th>
+		<th>1 less</th>
+		<th>10 more</th>
+		<th>Any more</th>
+		<th>Remove</th>
+	</tr>
+	<?php
+	foreach ($items as $item): ?>
+	<?php
+		if (!$item['Item']['for_sale']) {
+			continue;
+		}
+	?>
+	<tr>
+		<td>
+			<?php
+				echo $this->Html->link($item['Item']['name'], array(
+					'action' => 'view', $item['Item']['id']));
+			?>
+		</td>
+
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->submit(__('buy'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->input('quantity', array(
+					'label' => false,
+					'div' => false,
+					'style' => 'width: 50px;',
+					'default' => 1));
+				echo $this->Form->submit(__('buy'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->submit(__('+1'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->hidden('increment', array(
+					'value' => true));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->submit(__('-1'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->hidden('decrement', array(
+					'value' => true));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->submit(__('+10'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->hidden('increment', array(
+					'value' => 10));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->input('quantity', array(
+					'label' => false,
+					'div' => false,
+					'style' => 'width: 50px;',
+					'default' => 1));
+				echo $this->Form->submit(__('more'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->hidden('increment', array(
+					'value' => true));
+				echo $this->Form->end();
+			?>
+		</td>
+		<td>
+			<?php
+				echo $this->Form->create('CartsItem', array(
+					'action' => 'buy'));
+				echo $this->Form->submit(__('X'), array(
+					'div' => false));
+				echo $this->Form->hidden('foreign_key', array(
+					'value' => $item['Item']['id']));
+				echo $this->Form->hidden('model', array(
+					'value' => 'Item'));
+				echo $this->Form->hidden('remove', array(
+					'value' => true));
+				echo $this->Form->end();
+			?>
+		</td>
+	</tr>
+	<?php endforeach; ?>
+	</table>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
