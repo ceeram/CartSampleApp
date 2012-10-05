@@ -12,6 +12,12 @@ App::uses('AppController', 'Controller');
 class ItemsController extends AppController {
 
 /**
+ *
+ */
+	public $components = array(
+		'Session');
+
+/**
  * index method
  *
  * @return void
